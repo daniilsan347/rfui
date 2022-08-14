@@ -6,12 +6,19 @@
 #else
     #include <sys/ioctl.h>
     #include <unistd.h>
+    #include <locale>
 #endif
 #include "rfui.h"
 
-
 namespace rfui {
-
+    // Initialisation function
+    void init() {
+        #ifdef _WIN32
+            SetConsoleOutputCP(65001);
+        #else
+            std::locale::global(std::locale("en_US.UTF-8"));
+        #endif
+    }
     // Get terminal size
     void getTerminalSize(int &width, int &height) {
         #ifdef _WIN32
@@ -92,6 +99,13 @@ namespace rfui {
     // Reset text features
     void resetTextFeatures() {
         std::cout << "\x1B[0m";
+    }
+
+    void pause() {
+        do
+        {
+            std::cout << "Press [Enter] to continue...";
+        } while (std::cin.get() != '\n');
     }
 
 } // namespace rfui
