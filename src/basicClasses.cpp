@@ -36,7 +36,7 @@ void rfui::Widget::draw() {
         // Draw labels
         for (auto *label : this->labels) label->print();
 
-//        rfui::resetTextFeatures();
+        rfui::resetTextFeatures();
         moveCursorToBottom();
     }
 }
@@ -105,13 +105,6 @@ void rfui::Label::print() {
     }
 }
 
-rfui::Root::Root(int lines, int cols) {
-    this->lines = lines;
-    this->columns = cols;
-    this->bgColor = rfui::C::BG::BLK;
-    this->fgColor = rfui::C::FG::WHT;
-}
-
 rfui::Root::Root(int lines, int cols, int bgColor, int fgColor) {
     this->lines = lines;
     this->columns = cols;
@@ -132,20 +125,20 @@ void rfui::Root::addWidget(rfui::Widget* widget) {
 void rfui::Root::draw() {
     // Draw root
     // Move cursor and set colours
-    rfui::moveCursorTo(0, 0);
+    rfui::moveCursorToTop();
     rfui::setBgColor(this->bgColor);
     rfui::setFgColor(this->fgColor);
     // Draw background
     for (int i = 0; i < this->lines; i++) {
-        std::cout << "\x1B[" << this->columns << "G";
+        std::cout << "\x1B[0G";
         for (int j = 0; j < this->columns; j++) std::cout << ' ';
         std::cout << std::endl;
     }
+    rfui::resetTextFeatures();
     // Draw widgets
     for (auto widget : this->widgets) {
         widget->draw();
     }
-    rfui::resetTextFeatures();
     moveCursorToBottom();
 }
 

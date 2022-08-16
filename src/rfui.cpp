@@ -53,12 +53,24 @@ namespace rfui {
     }
     // Set terminal cursor position
     void moveCursorTo(int x, int y) {
+        int tCol, tRow;
+        getTerminalSize(tCol, tRow);
+
+        if (x < 1) x = 1;
+        else if (x > tCol) x = tCol;
+
+        if (y < 1) y = 1;
+        else if (y > tRow) y = tRow;
+
         std::cout << "\x1B[" << y << ";" << x << "f";
+    }
+    void moveCursorToTop() {
+        moveCursorTo(1, 1);
     }
     void moveCursorToBottom() {
         int x, y;
         getTerminalSize(x, y);
-        moveCursorTo(0, y);
+        moveCursorTo(1, y);
     };
     // Set terminal color
     int setFgColor(int color) {

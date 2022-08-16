@@ -14,6 +14,7 @@ namespace rfui {
     void getTerminalCursorPosition(int &x, int &y);
     void clearScreen();
     void moveCursorTo(int x, int y);
+    void moveCursorToTop();
     void moveCursorToBottom();
     int setFgColor(int color);
     int setBgColor(int color);
@@ -113,8 +114,7 @@ namespace rfui {
         std::vector<Widget *> widgets;
         int bgColor, fgColor;
     public:
-        Root(int lines, int cols);
-        Root(int lines, int cols, int bgColor, int fgColor);
+        Root(int lines, int cols, int bgColor = 0, int fgColor = 0);
         ~Root();
         void addWidget(Widget *widget);
         void draw();
