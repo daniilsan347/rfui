@@ -94,18 +94,40 @@ namespace rfui {
     void setBold(bool bold) {
         if (bold) {
             std::cout << "\x1B[1m";
+        } else {
+            std::cout << "\x1B[22m";
+        }
+    }
+    // Set terminal dim
+    void setDim(bool dim) {
+        if (dim) {
+            std::cout << "\x1B[2m";
+        } else {
+            std::cout << "\x1B[22m";
         }
     }
     // Set terminal italic
     void setItalic(bool italic) {
         if (italic) {
             std::cout << "\x1B[3m";
+        } else {
+            std::cout << "\x1B[23m";
         }
     }
     // Set terminal underlined
     void setUnderlined(bool underlined) {
         if (underlined) {
             std::cout << "\x1B[4m";
+        } else {
+            std::cout << "\x1B[24m";
+        }
+    }
+    // Set terminal inverse
+    void setInverse(bool inverse) {
+        if (inverse) {
+            std::cout << "\x1B[7m";
+        } else {
+            std::cout << "\x1B[27m";
         }
     }
     // Reset text features
@@ -113,7 +135,10 @@ namespace rfui {
         std::cout << "\x1B[0m";
     }
 
-    void pause() {
+    void pause(rfui::Root &root) {
+        int h, w;
+        root.getSize(h, w);
+        rfui::moveCursorTo(1, h+1);
         do
         {
             std::cout << "Press [Enter] to continue...";
