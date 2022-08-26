@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Label.h"
+#include "Input.h"
 
 namespace rfui {
 
@@ -17,26 +18,34 @@ namespace rfui {
         int height, width;
         int x, y;
         int bgColor, fgColor;
+        int rootBgColor;
         bool visible;
-        rfui::Label *title;
-        std::vector<rfui::Label *> labels;
+        Label *title;
+        std::vector<Label *> labels;
+        std::vector<InPrompt *> inPrompts;
     public:
         Widget(int height, int width, int x, int y, std::string title, int bgColor = 0, int fgColor = 0);
+        ~Widget();
         // Widget setters
-        void setSize(int w, int h) {this->width = w; this->height = h; };
-        void setPosition(int wX, int wY) { this->x = wX; this->y = wY; };
-        void setBgColor(int color) { this->bgColor = color; };
-        void setFgColor(int color) { this->fgColor = color; };
-        void setVisible(bool isVisible) { this->visible = isVisible; };
+        void setRootBg(int c) { this->rootBgColor = c; };
+        [[maybe_unused]] [[maybe_unused]] void setSize(int w, int h);
+        [[maybe_unused]] [[maybe_unused]] void setPosition(int wX, int wY);
+        [[maybe_unused]] void setBgColor(int color)       { this->bgColor = color;     this->draw(); };
+        [[maybe_unused]] void setFgColor(int color)       { this->fgColor = color;     this->draw(); };
+        [[maybe_unused]] void setVisible(bool isVisible);
         // Widget getters
-        void getSize(int &w, int &h) {w = this->width; h = this->height; };
-        void getPosition(int &wX, int &wY) { wX = this->x; wY = this->y; };
-        [[nodiscard]] int getBgColor() const {return this->bgColor; };
-        [[nodiscard]] int getFgColor() const {return this->fgColor; };
-        bool isVisible() {return this->visible; };
+        [[maybe_unused]] void getSize(int &w, int &h)       const { w = this->width; h = this->height; };
+        [[maybe_unused]] void getPosition(int &wX, int &wY) const { wX = this->x; wY = this->y;        };
+        [[maybe_unused]] [[nodiscard]] int getBgColor()     const { return this->bgColor;              };
+        [[maybe_unused]] [[nodiscard]] int getFgColor()     const { return this->fgColor;              };
+        [[maybe_unused]] [[nodiscard]] bool isVisible()     const { return this->visible;              };
         // Widget methods
         void draw();
-        void addLabel(rfui::Label *label);
+        void drawBg() const;
+        void erase() const;
+        void addLabel(Label *label);
+        [[maybe_unused]] void addInput(InPrompt *input);
+//        void addInput(InField *input);
 
     };
 

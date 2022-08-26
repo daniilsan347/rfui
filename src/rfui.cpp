@@ -64,14 +64,23 @@ namespace rfui {
 
         std::cout << "\x1B[" << y << ";" << x << "f";
     }
+    // Move cursor to top left corner
     void moveCursorToTop() {
         moveCursorTo(1, 1);
     }
+    // Move cursor to bottom left corner
     void moveCursorToBottom() {
         int x, y;
         getTerminalSize(x, y);
         moveCursorTo(1, y);
-    };
+    }
+    // Hide or show cursor
+    void hideCursor(bool hide) {
+        if (hide) std::cout << "\x1B[?25l";
+        else std::cout << "\x1B[?25h";
+    }
+
+    // Set terminal colors
     // Set terminal color
     int setFgColor(int color) {
         if (color >= 30 && color <= 37) {
@@ -135,7 +144,7 @@ namespace rfui {
         std::cout << "\x1B[0m";
     }
 
-    void pause(rfui::Root &root) {
+    [[maybe_unused]] void pause(rfui::Root &root) {
         int h, w;
         root.getSize(h, w);
         rfui::moveCursorTo(1, h+1);
@@ -143,6 +152,17 @@ namespace rfui {
         {
             std::cout << "Press [Enter] to continue...";
         } while (std::cin.get() != '\n');
+    }
+
+    int strLenUtf8(const std::string &str) {
+        int size = 0;
+        // Get size of unicode encoded string
+        for (char i : str) {
+            if ((i & 0xC0) != 0x80) {
+                size++;
+            }
+        }
+        return size;
     }
 
 } // namespace rfui

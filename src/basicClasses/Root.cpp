@@ -21,13 +21,14 @@ rfui::Root::~Root() {
     }
 }
 
-void rfui::Root::addWidget(rfui::Widget* widget) {
+void rfui::Root::addWidget(Widget* widget) {
     if (!widget->getBgColor()) {
         widget->setBgColor(this->bgColor);
     }
     if (!widget->getFgColor()) {
         widget->setFgColor(this->fgColor);
     }
+    widget->setRootBg(this->bgColor);
 
     this->widgets.push_back(widget);
 }
@@ -49,6 +50,6 @@ void rfui::Root::draw() {
     for (auto widget : this->widgets) {
         widget->draw();
     }
-    moveCursorToBottom();
+    rfui::moveCursorToBottom();
 }
 
