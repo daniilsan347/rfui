@@ -7,9 +7,10 @@
 
 #include <vector>
 
-#include "Widget.h"
+//#include "Widget.h"
 
 namespace rfui {
+    class Widget; // Forward declaration
 
     class Root {
     private:
@@ -17,6 +18,7 @@ namespace rfui {
         std::vector<Widget *> widgets;
         int bgColor, fgColor;
     public:
+        Root();
         Root(int lines, int cols, int bgColor = 0, int fgColor = 0);
         ~Root();
         void addWidget(Widget *widget);

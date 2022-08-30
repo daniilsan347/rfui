@@ -14,7 +14,7 @@ namespace rfui {
 
     void init();
     void getTerminalSize(int &width, int &height);
-    void getTerminalCursorPosition(int &x, int &y);
+    void getCursorPosition(int &x, int &y);
     void clearScreen();
     void moveCursorTo(int x, int y);
     void moveCursorToTop();

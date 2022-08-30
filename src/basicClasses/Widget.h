@@ -10,6 +10,7 @@
 
 #include "Label.h"
 #include "Input.h"
+#include "Root.h"
 
 namespace rfui {
 

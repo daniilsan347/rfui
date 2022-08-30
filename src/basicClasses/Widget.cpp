@@ -40,7 +40,7 @@ rfui::Widget::~Widget() {
 [[maybe_unused]] void rfui::Widget::setPosition(int wX, int wY) {
     this->setVisible(false);
     int offX, offY;
-    offX = this->x - wX; offY = this->y - wY;
+    offX = wX - this->x; offY = wY - this->y;
     this->x = wX; this->y = wY;
     this->title->setPosition(this->title->getX()+offX, this->title->getY()+offY);
     for (auto label: labels) label->setPosition(label->getX() + offX, label->getY() + offY);
@@ -57,11 +57,11 @@ void rfui::Widget::setVisible(bool isVisible) {
         for (auto inPrompt: inPrompts) inPrompt->setVisible(isVisible);
     }
     else {
-        this->visible = false;
         this->title->setVisible(false);
         for (auto label: labels) label->setVisible(false);
         for (auto inPrompt: inPrompts) inPrompt->setVisible(false);
         this->erase();
+        this->visible = false;
     }
 }
 
@@ -97,7 +97,7 @@ void rfui::Widget::drawBg() const {
         // Draw Widget
         // Move cursor and set colors
         rfui::moveCursorTo(this->x, this->y);
-        rfui::setBgColor(this->rootBgColor);
+        rfui::setBgColor(this->bgColor);
         rfui::setFgColor(this->fgColor);
         // Draw background
         for (int i = 0; i < this->height; i++) {

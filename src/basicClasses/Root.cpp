@@ -29,7 +29,6 @@ void rfui::Root::addWidget(Widget* widget) {
         widget->setFgColor(this->fgColor);
     }
     widget->setRootBg(this->bgColor);
-
     this->widgets.push_back(widget);
 }
 

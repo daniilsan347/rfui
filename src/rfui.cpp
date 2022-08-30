@@ -1,6 +1,7 @@
 // RedFox User Interface
 
 #include <iostream>
+#include <limits>
 #ifdef _WIN32
     #include <windows.h>
 #else
@@ -34,7 +35,7 @@ namespace rfui {
         #endif
     }
     // Get terminal cursor position
-    void getTerminalCursorPosition(int &x, int &y) {
+    void getCursorPosition(int &x, int &y) {
         #ifdef _WIN32
             CONSOLE_SCREEN_BUFFER_INFO csbi;
             GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -145,6 +146,7 @@ namespace rfui {
     }
 
     [[maybe_unused]] void pause(rfui::Root &root) {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         int h, w;
         root.getSize(h, w);
         rfui::moveCursorTo(1, h+1);
