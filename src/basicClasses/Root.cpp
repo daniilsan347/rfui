@@ -22,12 +22,8 @@ rfui::Root::~Root() {
 }
 
 void rfui::Root::addWidget(Widget* widget) {
-    if (!widget->getBgColor()) {
-        widget->setBgColor(this->bgColor);
-    }
-    if (!widget->getFgColor()) {
-        widget->setFgColor(this->fgColor);
-    }
+    if (!widget->getBgColor()) widget->setBgColor(this->bgColor);
+    if (!widget->getFgColor()) widget->setFgColor(this->fgColor);
     widget->setRootBg(this->bgColor);
     this->widgets.push_back(widget);
 }
@@ -40,7 +36,7 @@ void rfui::Root::draw() {
     rfui::setFgColor(this->fgColor);
     // Draw background
     for (int i = 0; i < this->lines; i++) {
-        std::cout << "\x1B[0G";
+        std::cout << "\x1B[1G";
         for (int j = 0; j < this->columns; j++) std::cout << ' ';
         std::cout << std::endl;
     }

@@ -167,4 +167,33 @@ namespace rfui {
         return size;
     }
 
+    void clearArea(int x, int y, int width, int height, int color) {
+        int tCol, tRow;
+        getTerminalSize(tCol, tRow);
+
+        // Check if area is out of bounds
+        if (x < 1) x = 1;
+        else if (x > tCol) x = tCol;
+
+        if (y < 1) y = 1;
+        else if (y > tRow) y = tRow;
+
+        if (width < 1) width = 1;
+        else if (width > tCol) width = tCol;
+
+        if (height < 1) height = 1;
+        else if (height > tRow) height = tRow;
+
+        // Set cursor properties
+        setBgColor(color);
+        moveCursorTo(x, y);
+
+        // Draw area
+        for (int i = 0; i < height; i++) {
+            moveCursorTo(x, y+i);
+            for (int j = 0; j < width; j++) std::cout << ' ';
+        }
+        moveCursorToBottom();
+    }
+
 } // namespace rfui

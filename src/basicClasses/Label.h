@@ -22,6 +22,7 @@ namespace rfui {
         int bgColor;
         std::string text;
     public:
+        Label();
         Label(int x, int y, std::string text, int fgColor = 0, int bgColor = 0);
         // Getters
         void getPosition(int &lX, int &lY)  const { lX = this->x; lY = this->y; };
@@ -33,18 +34,19 @@ namespace rfui {
         [[nodiscard]] std::string getText() const { return this->text;          };
         // Setters
         void setPosition(int lX, int lY);
-        void setFgColor(int color)           { this->fgColor    = color;       this->print();    };
-        void setBgColor(int color)           { this->bgColor    = color;       this->print();    };
-        void setBold(bool isBold)            { this->bold       = isBold;      this->print();    };
-        void setItalic(bool isItalic)        { this->italic     = isItalic;    this->print();    };
-        void setUnderlined(bool isUnderline) { this->underlined = isUnderline; this->print();    };
+        void setFgColor(int color)           { this->fgColor    = color;};
+        void setBgColor(int color)           { this->bgColor    = color;};
+        void setBold(bool isBold)            { this->bold       = isBold;};
+        void setItalic(bool isItalic)        { this->italic     = isItalic;};
+        void setUnderlined(bool isUnderline) { this->underlined = isUnderline;};
         void setVisible(bool isVisible);
-        void setText(std::string newText)    { this->text = std::move(newText); this->print(); };
+        void setText(std::string newText);
 
         // Methods
-        void print();
+        void draw();
         void erase() const;
     };
+
 
 } // rfui
 

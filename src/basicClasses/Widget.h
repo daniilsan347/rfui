@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Label.h"
+#include "TextField.h"
 #include "Input.h"
 #include "Root.h"
 
@@ -24,6 +25,8 @@ namespace rfui {
         Label *title;
         std::vector<Label *> labels;
         std::vector<InPrompt *> inPrompts;
+        std::vector<InField *> inFields;
+        std::vector<TextField *> textFields;
     public:
         Widget(int height, int width, int x, int y, std::string title, int bgColor = 0, int fgColor = 0);
         ~Widget();
@@ -31,8 +34,9 @@ namespace rfui {
         void setRootBg(int c) { this->rootBgColor = c; };
         [[maybe_unused]] [[maybe_unused]] void setSize(int w, int h);
         [[maybe_unused]] [[maybe_unused]] void setPosition(int wX, int wY);
-        [[maybe_unused]] void setBgColor(int color)       { this->bgColor = color;     this->draw(); };
-        [[maybe_unused]] void setFgColor(int color)       { this->fgColor = color;     this->draw(); };
+        [[maybe_unused]] void setBgColor(int color);
+        [[maybe_unused]] void setFgColor(int color);
+        [[maybe_unused]] void setTitle(std::string text) { this->title->setText(std::move(text)); };
         [[maybe_unused]] void setVisible(bool isVisible);
         // Widget getters
         [[maybe_unused]] void getSize(int &w, int &h)       const { w = this->width; h = this->height; };
@@ -45,8 +49,9 @@ namespace rfui {
         void drawBg() const;
         void erase() const;
         void addLabel(Label *label);
+        void addTextField(TextField *field);
         [[maybe_unused]] void addInput(InPrompt *input);
-//        void addInput(InField *input);
+        void addInput(InField *input);
 
     };
 

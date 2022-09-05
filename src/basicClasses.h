@@ -8,6 +8,8 @@
 #include "./basicClasses/Label.h"
 #include "./basicClasses/Widget.h"
 #include "./basicClasses/Root.h"
+#include "./basicClasses/Input.h"
+#include "./basicClasses/TextField.h"
 
 
 #endif //DSTUI_BASICCLASSES_H
