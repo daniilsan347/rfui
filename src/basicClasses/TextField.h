@@ -42,7 +42,7 @@ namespace rfui {
         void setWidth(int width) {this->w = width;};
         void setHeight(int height) {this->h = height;};
         // Methods
-        void addText(const std::string &str);
+        void addStr(const std::string &str);
         void draw();
         std::string& operator[](size_t index) {return lines[index];};
     };

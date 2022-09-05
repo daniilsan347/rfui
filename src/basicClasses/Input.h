@@ -89,7 +89,7 @@ namespace rfui {
         void setFgColor(int color) { this->fgColor = color; this->display.setFgColor(color); };
         void setWidth(int w) { this->width = w; this->display.setWidth(w); };
         void setHeight(int h) { this->height = h; this->display.setHeight(h); };
-        void setVisible(bool isVisible); // TO DO implement using clearArea
+        void setVisible(bool isVisible);
         // Getters
         [[maybe_unused]] [[nodiscard]] int  getX()       const { return this->x;       };
         [[maybe_unused]] [[nodiscard]] int  getY()       const { return this->y;       };
@@ -100,7 +100,7 @@ namespace rfui {
         [[maybe_unused]] [[nodiscard]] bool isVisible()  const { return this->visible; };
         [[nodiscard]] std::vector<InContainer> getData() const { return this->data; };
         //Methods
-        void addStr(const std::string& str) {this->display.addText(str);};
+        void addStr(const std::string& str) { this->display.addStr(str);};
         void draw();
         void update();
         std::vector<InContainer> getInput(int entries);

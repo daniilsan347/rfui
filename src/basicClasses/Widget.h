@@ -24,9 +24,9 @@ namespace rfui {
         bool visible;
         Label *title;
         std::vector<Label *> labels;
+        std::vector<TextField *> textFields;
         std::vector<InPrompt *> inPrompts;
         std::vector<InField *> inFields;
-        std::vector<TextField *> textFields;
     public:
         Widget(int height, int width, int x, int y, std::string title, int bgColor = 0, int fgColor = 0);
         ~Widget();

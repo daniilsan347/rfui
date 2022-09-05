@@ -72,6 +72,24 @@ void rfui::Widget::setVisible(bool isVisible) {
     }
 }
 
+void rfui::Widget::setBgColor(int color) {
+    this->bgColor = color;
+    this->title->setBgColor(color);
+    for (auto label: labels) if(!label->getBgColor()) label->setBgColor(color);
+    for (auto inPrompt: inPrompts) if(!inPrompt->getBgColor()) inPrompt->setBgColor(color);
+    for (auto textField: textFields) if(!textField->getBgColor()) textField->setBgColor(color);
+    for (auto inField: inFields) if(!inField->getBgColor()) inField->setBgColor(color);
+}
+
+void rfui::Widget::setFgColor(int color) {
+    this->fgColor = color;
+    this->title->setFgColor(color);
+    for (auto label: labels) if(!label->getFgColor()) label->setFgColor(color);
+    for (auto inPrompt: inPrompts) if(!inPrompt->getFgColor()) inPrompt->setFgColor(color);
+    for (auto textField: textFields) if(!textField->getFgColor()) textField->setFgColor(color);
+    for (auto inField: inFields) if(!inField->getFgColor()) inField->setFgColor(color);
+}
+
 // Widget methods
 void rfui::Widget::draw() {
     if (this->visible) {
@@ -109,6 +127,9 @@ void rfui::Widget::erase() const {
     }
 }
 
+// Add elements function
+
+// Adds Label object to "labels" vector in Widget
 void rfui::Widget::addLabel(Label *label) {
     int lX, lY;
     label->getPosition(lX, lY);
@@ -118,15 +139,7 @@ void rfui::Widget::addLabel(Label *label) {
     this->labels.push_back(label);
 }
 
-[[maybe_unused]] void rfui::Widget::addInput(InPrompt *inPrompt) {
-    int iPX, iPY;
-    inPrompt->getPosition(iPX, iPY);
-    inPrompt->setPosition(iPX + this->x + 1, iPY + this->y + 1);
-    if (inPrompt->getBgColor() == 0) inPrompt->setBgColor(this->bgColor);
-    if (inPrompt->getFgColor() == 0) inPrompt->setFgColor(this->fgColor);
-    this->inPrompts.push_back(inPrompt);
-}
-
+// Adds TextField object to "textFields" vector in Widget
 void rfui::Widget::addTextField(rfui::TextField *field) {
     int tfX, tfY;
     field->getPosition(tfX, tfY);
@@ -137,29 +150,23 @@ void rfui::Widget::addTextField(rfui::TextField *field) {
     this->textFields.push_back(field);
 }
 
+// Adds InPrompt object to "inPrompts" vector in Widget
+void rfui::Widget::addInput(InPrompt *inPrompt) {
+    int iPX, iPY;
+    inPrompt->getPosition(iPX, iPY);
+    inPrompt->setPosition(iPX + this->x + 1, iPY + this->y + 1);
+    if (inPrompt->getBgColor() == 0) inPrompt->setBgColor(this->bgColor);
+    if (inPrompt->getFgColor() == 0) inPrompt->setFgColor(this->fgColor);
+    this->inPrompts.push_back(inPrompt);
+}
+
+// Adds InField object to "inFields" vector in Widget
 void rfui::Widget::addInput(rfui::InField *input) {
     int ifX = input->getX(), ifY = input->getY();
-    input->setPosition(ifX + this->x + 1, ifY + this->y);
+    input->setPosition(ifX + this->x + 1, ifY + this->y + 1);
     if (input->getWidth() >= this->width) input->setWidth(this->width - 2);
+    if (input->getHeight() > this->height - 1) input->setHeight(this->height - 1);
     if (input->getBgColor() == 0) input->setBgColor(this->bgColor);
     if (input->getFgColor() == 0) input->setFgColor(this->fgColor);
     this->inFields.push_back(input);
-}
-
-void rfui::Widget::setBgColor(int color) {
-    this->bgColor = color;
-    this->title->setBgColor(color);
-    for (auto label: labels) if(!label->getBgColor()) label->setBgColor(color);
-    for (auto inPrompt: inPrompts) if(!inPrompt->getBgColor()) inPrompt->setBgColor(color);
-    for (auto textField: textFields) if(!textField->getBgColor()) textField->setBgColor(color);
-    for (auto inField: inFields) if(!inField->getBgColor()) inField->setBgColor(color);
-}
-
-void rfui::Widget::setFgColor(int color) {
-    this->fgColor = color;
-    this->title->setFgColor(color);
-    for (auto label: labels) if(!label->getFgColor()) label->setFgColor(color);
-    for (auto inPrompt: inPrompts) if(!inPrompt->getFgColor()) inPrompt->setFgColor(color);
-    for (auto textField: textFields) if(!textField->getFgColor()) textField->setFgColor(color);
-    for (auto inField: inFields) if(!inField->getFgColor()) inField->setFgColor(color);
 }

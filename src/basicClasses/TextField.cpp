@@ -7,13 +7,15 @@
 #include <iostream>
 #include <vector>
 
+// TextField default constructor
 rfui::TextField::TextField() {
-    this->x = 1; this->y = 1;
+    this->x = 0; this->y = 0;
     this->w = 0; this->h = 0;
     this->fgColor = 0;
     this->bgColor = 0;
 }
 
+// TextField constructor. Text has to be assigned with separate addStr function
 rfui::TextField::TextField(int x, int y, int w, int h, int fgColor, int bgColor) {
     this->x = x; this->y = y;
     this->w = w; this->h = h;
@@ -21,7 +23,8 @@ rfui::TextField::TextField(int x, int y, int w, int h, int fgColor, int bgColor)
     this->bgColor = bgColor;
 }
 
-void rfui::TextField::addText(const std::string &str) {
+// Adds text into TextField object. Automatically wraps text.
+void rfui::TextField::addStr(const std::string &str) {
     std::vector<std::string> words{};
     std::string word;
     // Split string into words
@@ -58,9 +61,8 @@ void rfui::TextField::draw() {
         rfui::setItalic(this->italic);
         rfui::setUnderlined(this->underlined);
         // Draw text
-
         if (!this->lines.empty()) {
-            for (int i = 0; i < this->h; ++i) {
+            for (int i = 0; i < this->lines.size(); ++i) {
                 rfui::moveCursorTo(this->x, this->y + i);
                 std::cout << this->lines[i];
             }

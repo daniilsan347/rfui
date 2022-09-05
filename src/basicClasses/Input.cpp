@@ -72,8 +72,9 @@ void rfui::InPrompt::draw() {
 rfui::InField::InField(int x, int y, int w, int h, int bgColor, int fgColor) {
     this->x = x;
     this->y = y;
-    this->width = w;
-    this->height = h;
+    this->display.setPosition(x, y);
+    this->width = w; this->display.setWidth(w);
+    this->height = h; this->display.setHeight(h);
     this->bgColor = bgColor;
     this->fgColor = fgColor;
 }
@@ -138,7 +139,7 @@ std::vector<rfui::InContainer> rfui::InField::getInput(int entries) {
         // Get input
         std::string tempString;
         for (int i = 0; i < entries; ++i) {
-            rfui::moveCursorTo(2, this->getY());
+            rfui::moveCursorTo(this->getX(), this->getY());
             rfui::setBgColor(this->getBgColor()); rfui::setFgColor(this->getFgColor());
             rfui::setInverse(true);
             std::cin >> tempString;
