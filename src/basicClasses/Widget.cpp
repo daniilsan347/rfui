@@ -8,7 +8,7 @@
 #include "Label.h"
 #include "rfui.h"
 
-rfui::Widget::Widget(int height, int width, int x, int y, std::string title, int bgColor, int fgColor) {
+rfui::Widget::Widget(int height, int width, int x, int y, std::string title, int fgColor, int bgColor) {
     this->height = height;
     this->width = width;
     this->x = x;
@@ -18,7 +18,6 @@ rfui::Widget::Widget(int height, int width, int x, int y, std::string title, int
     this->visible = true;
     this->title = new Label(x + 1, y, std::move(title), fgColor, bgColor);
     this->title->setUnderlined(true);
-    this->rootBgColor = 0;
 }
 
 rfui::Widget::~Widget() {
@@ -39,38 +38,37 @@ rfui::Widget::~Widget() {
 
 // Widget setters
 [[maybe_unused]] void rfui::Widget::setSize(int w, int h) {
-    this->erase();
     this->width = w; this->height = h;
-    this->draw();
 }
 
 [[maybe_unused]] void rfui::Widget::setPosition(int wX, int wY) {
-    this->setVisible(false);
     int offX, offY;
     offX = wX - this->x; offY = wY - this->y;
     this->x = wX; this->y = wY;
+
     this->title->setPosition(this->title->getX()+offX, this->title->getY()+offY);
     for (auto label: labels) label->setPosition(label->getX() + offX, label->getY() + offY);
+    for (auto textField: textFields) textField->setPosition(textField->getX() + offX, textField->getY() + offY);
     for (auto inPrompt: inPrompts) inPrompt->setPosition(inPrompt->getX() + offX, inPrompt->getY() + offY);
-    this->setVisible(true);
+    for (auto inField: inFields) inField->setPosition(inField->getX() + offX, inField->getY() + offY);
 }
 
-void rfui::Widget::setVisible(bool isVisible) {
-    if (isVisible) {
-        this->visible = true;
-        this->drawBg();
-        this->title->setVisible(true);
-        for (auto label: labels) label->setVisible(isVisible);
-        for (auto inPrompt: inPrompts) inPrompt->setVisible(isVisible);
-    }
-    else {
-        this->title->setVisible(false);
-        for (auto label: labels) label->setVisible(false);
-        for (auto inPrompt: inPrompts) inPrompt->setVisible(false);
-        this->erase();
-        this->visible = false;
-    }
-}
+//void rfui::Widget::setVisible(bool isVisible) {
+//    if (isVisible) {
+//        this->visible = true;
+//        this->drawBg();
+//        this->title->setVisible(true);
+//        for (auto label: labels) label->setVisible(isVisible);
+//        for (auto inPrompt: inPrompts) inPrompt->setVisible(isVisible);
+//    }
+//    else {
+//        this->title->setVisible(false);
+//        for (auto label: labels) label->setVisible(false);
+//        for (auto inPrompt: inPrompts) inPrompt->setVisible(false);
+//        this->erase();
+//        this->visible = false;
+//    }
+//}
 
 void rfui::Widget::setBgColor(int color) {
     this->bgColor = color;
@@ -90,50 +88,12 @@ void rfui::Widget::setFgColor(int color) {
     for (auto inField: inFields) if(!inField->getFgColor()) inField->setFgColor(color);
 }
 
-// Widget methods
-void rfui::Widget::draw() {
-    if (this->visible) {
-        // Draw Widget
-        rfui::clearArea(this->x, this->y, this->width, this->height, this->bgColor);
-        rfui::setFgColor(this->fgColor);
-        // Draw title
-        this->title->draw();
-        // Draw labels
-        for (auto *label : this->labels) label->draw();
-        // Draw textFields
-        for (auto *textField : this->textFields) textField->draw();
-        // Draw inPrompts
-        for (auto *inPrompt : this->inPrompts) inPrompt->draw();
-        rfui::resetTextFeatures();
-        rfui::moveCursorToBottom();
-    }
-}
-
-void rfui::Widget::drawBg() const {
-    if (this->visible) {
-        // Draw Widget
-        rfui::clearArea(this->x, this->y, this->width, this->height, this->bgColor);
-        rfui::resetTextFeatures();
-        rfui::moveCursorToBottom();
-    }
-}
-
-void rfui::Widget::erase() const {
-    if (this->visible) {
-        // Erase widget
-        rfui::clearArea(this->x, this->y, this->width, this->height, this->rootBgColor);
-        rfui::resetTextFeatures();
-        rfui::moveCursorToBottom();
-    }
-}
-
 // Add elements function
-
 // Adds Label object to "labels" vector in Widget
 void rfui::Widget::addLabel(Label *label) {
     int lX, lY;
     label->getPosition(lX, lY);
-    label->setPosition(lX + this->x + 1, lY + this->y + 1);
+    label->setPosition(lX + this->x, lY + this->y);
     if (label->getBgColor() == 0) label->setBgColor(this->bgColor);
     if (label->getFgColor() == 0) label->setFgColor(this->fgColor);
     this->labels.push_back(label);
@@ -143,7 +103,7 @@ void rfui::Widget::addLabel(Label *label) {
 void rfui::Widget::addTextField(rfui::TextField *field) {
     int tfX, tfY;
     field->getPosition(tfX, tfY);
-    field->setPosition(tfX + this->x + 1, tfY + this->y + 1);
+    field->setPosition(tfX + this->x, tfY + this->y);
     if (field->getWidth() >= this->width) field->setWidth(this->width - 2);
     if (field->getBgColor() == 0) field->setBgColor(this->bgColor);
     if (field->getFgColor() == 0) field->setFgColor(this->fgColor);
@@ -154,7 +114,7 @@ void rfui::Widget::addTextField(rfui::TextField *field) {
 void rfui::Widget::addInput(InPrompt *inPrompt) {
     int iPX, iPY;
     inPrompt->getPosition(iPX, iPY);
-    inPrompt->setPosition(iPX + this->x + 1, iPY + this->y + 1);
+    inPrompt->setPosition(iPX + this->x, iPY + this->y);
     if (inPrompt->getBgColor() == 0) inPrompt->setBgColor(this->bgColor);
     if (inPrompt->getFgColor() == 0) inPrompt->setFgColor(this->fgColor);
     this->inPrompts.push_back(inPrompt);
@@ -163,10 +123,29 @@ void rfui::Widget::addInput(InPrompt *inPrompt) {
 // Adds InField object to "inFields" vector in Widget
 void rfui::Widget::addInput(rfui::InField *input) {
     int ifX = input->getX(), ifY = input->getY();
-    input->setPosition(ifX + this->x + 1, ifY + this->y + 1);
+    input->setPosition(ifX + this->x, ifY + this->y);
     if (input->getWidth() >= this->width) input->setWidth(this->width - 2);
     if (input->getHeight() > this->height - 1) input->setHeight(this->height - 1);
     if (input->getBgColor() == 0) input->setBgColor(this->bgColor);
     if (input->getFgColor() == 0) input->setFgColor(this->fgColor);
     this->inFields.push_back(input);
+}
+
+void rfui::Widget::draw(rfui::BufferCell **buffer) {
+    if (!this->visible) return;
+
+    // Put widget colours to the buffer
+    for (int i = this->y; i < this->y + this->height; i++) {
+        for (int j = this->x; j < this->x + this->width; j++) {
+            buffer[i][j].bgColor = this->bgColor;
+            buffer[i][j].fgColor = this->fgColor;
+        }
+    }
+
+    // Call draw() method for all elements
+    this->title->draw(buffer);
+    for (auto label: this->labels) label->draw(buffer);
+    for (auto textField: this->textFields) textField->draw(buffer);
+    for (auto inPrompt: this->inPrompts) inPrompt->draw(buffer);
+    for (auto inField: this->inFields) inField->draw(buffer);
 }

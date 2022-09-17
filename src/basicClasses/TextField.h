@@ -9,6 +9,8 @@
 #include <vector>
 
 namespace rfui {
+    struct BufferCell;
+
     class TextField {
     private:
         int x, y;
@@ -43,7 +45,7 @@ namespace rfui {
         void setHeight(int height) {this->h = height;};
         // Methods
         void addStr(const std::string &str);
-        void draw();
+        void draw(BufferCell **buffer);
         std::string& operator[](size_t index) {return lines[index];};
     };
 }

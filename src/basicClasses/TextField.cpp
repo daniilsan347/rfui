@@ -51,26 +51,46 @@ void rfui::TextField::addStr(const std::string &str) {
     }
 }
 
-void rfui::TextField::draw() {
-    if (this->visible) {
-        // Draw background
-        rfui::clearArea(this->x, this->y, this->w, this->h, this->bgColor);
-        // Set text features
-        rfui::setFgColor(this->fgColor);
-        rfui::setBold(this->bold);
-        rfui::setItalic(this->italic);
-        rfui::setUnderlined(this->underlined);
-        // Draw text
-        if (!this->lines.empty()) {
-            for (int i = 0; i < this->lines.size(); ++i) {
-                rfui::moveCursorTo(this->x, this->y + i);
-                std::cout << this->lines[i];
-            }
+void rfui::TextField::draw(rfui::BufferCell **buffer) {
+    if (!this->visible) return;
+    // Get separated text
+    std::vector<std::string> symbols[this->h];
+    for (int i = 0; i < this->h; i++) {
+        symbols[i] = rfui::splitUtf8(this->lines[i]);
+    }
+    // Put colours and symbols to the buffer
+    for (int i = 0; i < this->h; i++) {
+        for (int j = 0; j < this->w; j++) {
+            buffer[this->y + i][this->x + j].fgColor = this->fgColor;
+            buffer[this->y + i][this->x + j].bgColor = this->bgColor;
+            buffer[this->y + i][this->x + j].bold = this->bold;
+            buffer[this->y + i][this->x + j].italic = this->italic;
+            buffer[this->y + i][this->x + j].underlined = this->underlined;
+            buffer[this->y + i][this->x + j].symbol = symbols[i][j];
         }
-
-        rfui::resetTextFeatures();
-        rfui::moveCursorToBottom();
     }
 }
+
+//void rfui::TextField::draw() {
+//    if (this->visible) {
+//        // Draw background
+//        rfui::clearArea(this->x, this->y, this->w, this->h, this->bgColor);
+//        // Set text features
+//        rfui::setFgColor(this->fgColor);
+//        rfui::setBold(this->bold);
+//        rfui::setItalic(this->italic);
+//        rfui::setUnderlined(this->underlined);
+//        // Draw text
+//        if (!this->lines.empty()) {
+//            for (int i = 0; i < this->lines.size(); ++i) {
+//                rfui::moveCursorTo(this->x, this->y + i);
+//                std::cout << this->lines[i];
+//            }
+//        }
+//
+//        rfui::resetTextFeatures();
+//        rfui::moveCursorToBottom();
+//    }
+//}
 
 

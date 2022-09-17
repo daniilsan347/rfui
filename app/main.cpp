@@ -1,39 +1,45 @@
 #include "rfui.h"
-#include <cmath>
-#include <vector>
-
-
-
+#include <chrono>
+#include <string>
+#include <thread>
 
 int main() {
     rfui::init();
     rfui::clearScreen();
-
-    rfui::Root root(30, 120, rfui::C::BG::WHT, rfui::C::FG::BLK);
-    auto header = new rfui::Widget(1, 120, 1, 1, "Тест", rfui::C::BG::RED);
-    root.addWidget(header);
-
-    auto inputs = new rfui::Widget(4, 120, 1, 2, "Ввід", rfui::C::BG::BLU);
-    auto prompt = new rfui::InPrompt(0, 0, "Одностроковий:");
-    auto field  = new rfui::InField(0,1,120,2);
-    inputs->addInput(prompt); inputs->addInput(field);
-    root.addWidget(inputs);
-
-    auto outputs = new rfui::Widget(4, 120, 1, 7, "Вивід", rfui::C::BG::GRN);
-    auto aLabel = new rfui::Label(0, 0, "Prompt: ");
-    auto textField = new rfui::TextField(0, 1, 120, 2);
-    outputs->addLabel(aLabel); outputs->addTextField(textField);
-    root.addWidget(outputs);
-
+    int tW, tH; rfui::getTerminalSize(tW, tH);
+    rfui::Root root(tH, tW, rfui::C::FG::BLK, rfui::C::BG::WHT);
+    auto *wid1 = new rfui::Widget(1, 20, 0, 0, "W: " + std::to_string(tW) + ", H: " + std::to_string(tH), rfui::C::FG::WHT, rfui::C::BG::RED);
+    root.addWidget(wid1);
+    auto *wid2 = new rfui::Widget(3, 20, 0, 2, "Час", rfui::C::FG::BLK, rfui::C::BG::GRN);
+    auto *clock = new rfui::Label(0, 1, ""); wid2->addLabel(clock);
+    auto *animation = new rfui::Label(0, 2, ""); wid2->addLabel(animation);
+    root.addWidget(wid2);
     root.draw();
 
-    auto promptResult = prompt->getInput().getInt();
-    aLabel->setText("Prompt: " + std::to_string(promptResult));
-    aLabel->draw();
+    // Starting time
+    auto start = std::chrono::system_clock::now();
 
-    auto fieldResult = field->getInput(4); // fix me: cursed InField draw
-    for (auto &i : fieldResult) {
-        textField->addText(i.getString());
+    int i = 0;
+    while (true) {
+        // Generate time string in hh:mm:ss format
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+        std::string time = std::ctime(&in_time_t);
+        time = time.substr(11, 8);
+        clock->setText(time);
+        animation->setText(std::to_string(i));
+        i++;
+        // Draw
+        root.draw();
+        if (i > 20) break;
     }
+
+    // Final time
+    auto end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    rfui::resetTextFeatures();
+    std::cout << "Elapsed time: " << elapsed_seconds.count() << "s" << std::endl;
+    std::cout << "FPS: " << i / elapsed_seconds.count() << std::endl;
+
     return 0;
 }

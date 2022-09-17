@@ -140,6 +140,15 @@ namespace rfui {
             std::cout << "\x1B[27m";
         }
     }
+    // Set text features in one function
+    void setTextFeatures(bool bold, bool italic, bool underlined, bool dim, bool inverse) {
+        setBold(bold);
+        setItalic(italic);
+        setUnderlined(underlined);
+        setDim(dim);
+        setInverse(inverse);
+    }
+
     // Reset text features
     void resetTextFeatures() {
         std::cout << "\x1B[0m";
@@ -165,6 +174,24 @@ namespace rfui {
             }
         }
         return size;
+    }
+    std::vector<std::string> splitUtf8(const std::string &str) {
+        std::vector<std::string> result;
+        std::string temp;
+        // Split unicode encoded string
+        for (char i : str) {
+            if ((i & 0xC0) != 0x80) {
+                if (!temp.empty()) {
+                    result.push_back(temp);
+                    temp.clear();
+                }
+            }
+            temp += i;
+        }
+        if (!temp.empty()) {
+            result.push_back(temp);
+        }
+        return result;
     }
 
     void clearArea(int x, int y, int width, int height, int color) {

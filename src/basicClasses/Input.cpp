@@ -8,7 +8,7 @@
 #include <iostream>
 #include <utility>
 
-rfui::InPrompt::InPrompt(int x, int y, std::string prompt, int bgColor, int fgColor) {
+rfui::InPrompt::InPrompt(int x, int y, std::string prompt, int fgColor, int bgColor) {
     this->x = x;
     this->y = y;
     this->promptLabel = new Label(x, y, std::move(prompt), fgColor, bgColor);
@@ -30,34 +30,12 @@ rfui::InPrompt::~InPrompt() {
 
 }
 
-void rfui::InPrompt::setVisible(bool isVisible) {
-    if (isVisible) {
-        this->visible = true;
-        this->promptLabel->setVisible(true);
-        this->input->setVisible(true);
-    } else {
-        this->visible = false;
-        this->promptLabel->setVisible(false);
-        this->input->setVisible(false);
-    }
-}
-
 // Methods
-void rfui::InPrompt::draw() {
-    if (this->visible) {
-        // Print prompt
-        this->promptLabel->draw();
-        // Print input
-        if (!this->input->getText().empty()) {
-            this->input->draw();
-        }
-    }
-}
 
 [[maybe_unused]] rfui::InContainer rfui::InPrompt::getInput() {
     if (this->visible) {
         std::string tempString;
-        rfui::moveCursorTo(this->input->getX(), this->input->getY());
+        rfui::moveCursorTo(this->input->getX() + 1, this->input->getY() + 1);
         rfui::setBgColor(this->bgColor);
         rfui::setFgColor(this->fgColor);
         rfui::setInverse(true);
@@ -69,7 +47,17 @@ void rfui::InPrompt::draw() {
     } else return {};
 }
 
-rfui::InField::InField(int x, int y, int w, int h, int bgColor, int fgColor) {
+void rfui::InPrompt::draw(rfui::BufferCell **buffer) {
+    if (!this->visible) return;
+    // Print prompt
+    this->promptLabel->draw(buffer);
+    // Print input
+    if (!this->input->getText().empty()) {
+        this->input->draw(buffer);
+    }
+}
+
+rfui::InField::InField(int x, int y, int w, int h, int fgColor, int bgColor) {
     this->x = x;
     this->y = y;
     this->display.setPosition(x, y);
@@ -86,33 +74,20 @@ void rfui::InField::setPosition(int posX, int posY) {
     this->display.setPosition(this->display.getX() + offX, this->display.getY() + offY);
 }
 
-void rfui::InField::setVisible(bool isVisible) {
-    if (isVisible) {
-        this->visible = true;
-        this->draw();
-    } else {
-        this->visible = false;
-        rfui::clearArea(this->x, this->y, this->width, this->height, this->bgColor);
+
+void rfui::InField::draw(BufferCell **buffer) {
+    if (!this->visible) return;
+    // Put colors to buffer
+    for (int i = this->x; i < this->x + this->width; i++) {
+        for (int j = this->y; j < this->y + this->height; j++) {
+            buffer[i][j].bgColor = this->bgColor;
+            buffer[i][j].fgColor = this->fgColor;
+        }
     }
+    // Call display draw
+    this->display.draw(buffer);
 }
 
-void rfui::InField::draw() {
-    // Draw background
-    rfui::clearArea(this->x, this->y, this->width, this->height, this->bgColor);
-    // Draw content
-    this->display.draw();
-    // Reset text features
-    rfui::resetTextFeatures();
-    rfui::moveCursorToBottom();
-}
-
-void rfui::InField::update() {
-    this->display.draw();
-    // Reset text features
-    rfui::resetTextFeatures();
-    rfui::moveCursorToBottom();
-
-}
 
 void rfui::InField::getEndPos(int &xPos, int &yPos) {
     if (this->display.getLines().empty()) {
@@ -130,28 +105,29 @@ void rfui::InField::getEndPos(int &xPos, int &yPos) {
 }
 
 
-std::vector<rfui::InContainer> rfui::InField::getInput(int entries) {
-    if (this->visible) {
-        // Reset
-        this->data.clear();
-        this->display.getLines().clear();
-        this->update();
-        // Get input
-        std::string tempString;
-        for (int i = 0; i < entries; ++i) {
-            rfui::moveCursorTo(this->getX(), this->getY());
-            rfui::setBgColor(this->getBgColor()); rfui::setFgColor(this->getFgColor());
-            rfui::setInverse(true);
-            std::cin >> tempString;
-            rfui::resetTextFeatures();
-            this->data.emplace_back(tempString);
-            this->addStr(tempString);
-            this->update();
-        }
-        return this->data;
+std::vector<rfui::InContainer> rfui::InField::getInput(int entries, Root *root) {
+    if (!this->visible) return {};
+    // Reset
+    this->reset();
+    root->draw();
+    // Get input
+    std::string tempString;
+    for (int i = 0; i < entries; ++i) {
+        rfui::moveCursorTo(this->getX() + 1, this->getY() + 1);
+        rfui::setBgColor(this->getBgColor()); rfui::setFgColor(this->getFgColor());
+        rfui::setInverse(true);
+        std::cin >> tempString;
+        rfui::resetTextFeatures();
+        this->data.emplace_back(tempString);
+        this->addStr(tempString);
+        root->draw();
     }
+    return this->data;
+}
 
-    return {};
+void rfui::InField::reset() {
+    this->data.clear();
+    this->display.getLines().clear();
 }
 
 

@@ -27,9 +27,11 @@ namespace rfui {
     void setItalic(bool italic);
     void setUnderlined(bool underlined);
     void setInverse(bool inverse);
+    void setTextFeatures(bool bold, bool italic, bool underlined, bool dim, bool inverse);
     void resetTextFeatures();
     [[maybe_unused]] void pause(rfui::Root &root);
     int strLenUtf8(const std::string &str);
+    std::vector<std::string> splitUtf8(const std::string &str);
     void clearArea(int x, int y, int width, int height, int color);
 
     // Color references

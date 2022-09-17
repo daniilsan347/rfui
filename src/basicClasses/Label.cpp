@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Label.h"
+#include <string>
 #include "rfui.h"
 
 rfui::Label::Label() {
@@ -32,57 +33,22 @@ rfui::Label::Label(int x, int y, std::string text, int fgColor, int bgColor) {
     this->bgColor = bgColor;
 }
 
-void rfui::Label::setPosition(int lX, int lY) {
-    this->erase();
-    this->x = lX; this->y = lY;
-    this->draw();
-}
-
-void rfui::Label::setVisible(bool isVisible) {
-    if (isVisible) {
-        this->visible = true;
-        this->draw();
-    } else {
-        this->visible = false;
-        this->erase();
-    }
-}
-
-void rfui::Label::draw() {
-    if (this->visible) {
-        // Draw Label
-        // Move cursor and set colours
-        rfui::moveCursorTo(this->x, this->y);
-        rfui::setFgColor(this->fgColor);
-        rfui::setBgColor(this->bgColor);
-        // Draw text
-        rfui::setBold(this->bold);
-        rfui::setItalic(this->italic);
-        rfui::setUnderlined(this->underlined);
-
-        std::cout << this->text;
-
-        rfui::moveCursorToBottom();
-        rfui::resetTextFeatures();
-    }
-}
-
-void rfui::Label::erase() const {
-    if (this->visible) {
-        // Erase Label
-        // Move cursor and set colours
-        rfui::moveCursorTo(this->x, this->y);
-        rfui::setFgColor(this->bgColor);
-        rfui::setBgColor(this->fgColor);
-        // Erase text
-        for (int i = 0; i < this->len; i++) std::cout << ' ';
-        rfui::moveCursorToBottom();
-        rfui::resetTextFeatures();
-    }
-}
-
 void rfui::Label::setText(std::string newText) {
-    this->text = std::move(newText);
+    this->text = newText;
     this->len = rfui::strLenUtf8(this->text);
-    this->draw();
+}
+
+void rfui::Label::draw(rfui::BufferCell **buffer) {
+    if (!this->visible) return;
+    // Get separated text
+    std::vector<std::string> symbols = rfui::splitUtf8(this->text);
+    // Put colours and symbols to the buffer
+    for (int i = 0; i < this->len; i++) {
+        buffer[this->y][this->x + i].fgColor = this->fgColor;
+        buffer[this->y][this->x + i].bgColor = this->bgColor;
+        buffer[this->y][this->x + i].bold = this->bold;
+        buffer[this->y][this->x + i].italic = this->italic;
+        buffer[this->y][this->x + i].underlined = this->underlined;
+        buffer[this->y][this->x + i].symbol = symbols[i];
+    }
 }

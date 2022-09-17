@@ -9,6 +9,7 @@
 #include <utility>
 
 namespace rfui {
+    struct BufferCell;
 
     class Label {
     private:
@@ -33,18 +34,17 @@ namespace rfui {
         [[nodiscard]] int getBgColor()      const { return this->bgColor;       };
         [[nodiscard]] std::string getText() const { return this->text;          };
         // Setters
-        void setPosition(int lX, int lY);
+        void setPosition(int lX, int lY)  {this->x = lX; this->y = lY; };
         void setFgColor(int color)           { this->fgColor    = color;};
         void setBgColor(int color)           { this->bgColor    = color;};
         void setBold(bool isBold)            { this->bold       = isBold;};
         void setItalic(bool isItalic)        { this->italic     = isItalic;};
         void setUnderlined(bool isUnderline) { this->underlined = isUnderline;};
-        void setVisible(bool isVisible);
+        void setVisible(bool isVisible) { this->visible = isVisible; };
         void setText(std::string newText);
 
         // Methods
-        void draw();
-        void erase() const;
+        void draw(BufferCell **buffer);
     };
 
 
