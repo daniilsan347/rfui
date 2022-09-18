@@ -2,11 +2,13 @@
 // Created by daniilsan on 25.08.2022.
 //
 
-#include <iostream>
-
 #include "Root.h"
 #include "Widget.h"
 #include "rfui.h"
+
+#include <fmt/format.h>
+
+using fmt::print;
 
 rfui::Root::Root(int lines, int cols, int fgColor, int bgColor) {
     this->lines = lines;
@@ -43,9 +45,9 @@ void rfui::Root::addWidget(Widget* widget) {
 //    rfui::setFgColor(this->fgColor);
 //    // Draw background
 //    for (int i = 0; i < this->lines; i++) {
-//        std::cout << "\x1B[1G";
-//        for (int j = 0; j < this->columns; j++) std::cout << ' ';
-//        std::cout << std::endl;
+//        print("\x1B[1G";
+//        for (int j = 0; j < this->columns; j++) print(' ';
+//        print(std::endl;
 //    }
 //    rfui::resetTextFeatures();
 //    // Draw widgets
@@ -86,7 +88,7 @@ void rfui::Root::draw() {
     rfui::moveCursorToTop();
     BufferCell prevCell;
     for (int i = 0; i < this->lines; i++) {
-        std::cout << "\x1B[1G";
+        print("\x1B[1G");
         for (int j = 0; j < this->columns; j++) {
             if (i == 0 && j == 0) {
                 prevCell = this->buffer[i][j];
@@ -104,9 +106,9 @@ void rfui::Root::draw() {
                 if (prevCell.inverse != this->buffer[i][j].inverse) rfui::setInverse(this->buffer[i][j].inverse);
                 prevCell = this->buffer[i][j];
             }
-            std::cout << this->buffer[i][j].symbol;
+            print("{}", this->buffer[i][j].symbol);
         }
-        if (i != this->lines - 1) std::cout << '\n';
+        if (i != this->lines - 1) std::putchar('\n');
     }
     rfui::hideCursor(false);
 }

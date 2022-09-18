@@ -1,7 +1,11 @@
 // RedFox User Interface
 
-#include <iostream>
 #include <limits>
+
+#include <fmt/format.h>
+#include <cstdio>
+
+
 #ifdef _WIN32
     #include <windows.h>
 #else
@@ -10,6 +14,8 @@
     #include <locale>
 #endif
 #include "rfui.h"
+
+using fmt::print;
 
 namespace rfui {
     // Initialisation function
@@ -35,22 +41,22 @@ namespace rfui {
         #endif
     }
     // Get terminal cursor position
-    void getCursorPosition(int &x, int &y) {
-        #ifdef _WIN32
-            CONSOLE_SCREEN_BUFFER_INFO csbi;
-            GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-            x = csbi.dwCursorPosition.X;
-            y = csbi.dwCursorPosition.Y;
-        #else
-            struct winsize w;
-            ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-            x = w.ws_x;
-            y = w.ws_y;
-        #endif
-    }
+//    void getCursorPosition(int &x, int &y) {
+//        #ifdef _WIN32
+//            CONSOLE_SCREEN_BUFFER_INFO csbi;
+//            GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+//            x = csbi.dwCursorPosition.X;
+//            y = csbi.dwCursorPosition.Y;
+//        #else
+//            struct winsize w;
+//            ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+//            x = w.ws_x;
+//            y = w.ws_y;
+//        #endif
+//    }
     // Clear screen
     void clearScreen() {
-        std::cout << "\x1B[2J\x1B[H";
+        print("\x1B[2J\x1B[H");
     }
     // Set terminal cursor position
     void moveCursorTo(int x, int y) {
@@ -63,7 +69,7 @@ namespace rfui {
         if (y < 1) y = 1;
         else if (y > tRow) y = tRow;
 
-        std::cout << "\x1B[" << y << ";" << x << "f";
+        print("\x1B[{};{}f", y, x);
     }
     // Move cursor to top left corner
     void moveCursorToTop() {
@@ -77,15 +83,15 @@ namespace rfui {
     }
     // Hide or show cursor
     void hideCursor(bool hide) {
-        if (hide) std::cout << "\x1B[?25l";
-        else std::cout << "\x1B[?25h";
+        if (hide) print("\x1B[?25l");
+        else print("\x1B[?25h");
     }
 
     // Set terminal colors
     // Set terminal color
     int setFgColor(int color) {
         if (color >= 30 && color <= 37) {
-            std::cout << "\x1B[" << color << "m";
+            print("\x1b[{}m", color);
             return 0;
         } else {
             return 1;
@@ -94,7 +100,7 @@ namespace rfui {
     // Set terminal background color
     int setBgColor(int color) {
         if (color >= 40 && color <= 47) {
-            std::cout << "\x1B[" << color << "m";
+            print("\x1b[{}m", color);
             return 0;
         } else {
             return 1;
@@ -103,41 +109,41 @@ namespace rfui {
     // Set terminal bold
     void setBold(bool bold) {
         if (bold) {
-            std::cout << "\x1B[1m";
+            print("\x1B[1m");
         } else {
-            std::cout << "\x1B[22m";
+            print("\x1B[22m");
         }
     }
     // Set terminal dim
     void setDim(bool dim) {
         if (dim) {
-            std::cout << "\x1B[2m";
+            print("\x1B[2m");
         } else {
-            std::cout << "\x1B[22m";
+            print("\x1B[22m");
         }
     }
     // Set terminal italic
     void setItalic(bool italic) {
         if (italic) {
-            std::cout << "\x1B[3m";
+            print("\x1B[3m");
         } else {
-            std::cout << "\x1B[23m";
+            print("\x1B[23m");
         }
     }
     // Set terminal underlined
     void setUnderlined(bool underlined) {
         if (underlined) {
-            std::cout << "\x1B[4m";
+            print("\x1B[4m");
         } else {
-            std::cout << "\x1B[24m";
+            print("\x1B[24m");
         }
     }
     // Set terminal inverse
     void setInverse(bool inverse) {
         if (inverse) {
-            std::cout << "\x1B[7m";
+            print("\x1B[7m");
         } else {
-            std::cout << "\x1B[27m";
+            print("\x1B[27m");
         }
     }
     // Set text features in one function
@@ -151,7 +157,7 @@ namespace rfui {
 
     // Reset text features
     void resetTextFeatures() {
-        std::cout << "\x1B[0m";
+        print("\x1B[0m");
     }
 
     [[maybe_unused]] void pause(rfui::Root &root) {
@@ -161,7 +167,7 @@ namespace rfui {
         rfui::moveCursorTo(1, h+1);
         do
         {
-            std::cout << "Press [Enter] to continue...";
+            print("Press [Enter] to continue...");
         } while (std::cin.get() != '\n');
     }
 
@@ -218,7 +224,7 @@ namespace rfui {
         // Draw area
         for (int i = 0; i < height; i++) {
             moveCursorTo(x, y+i);
-            for (int j = 0; j < width; j++) std::cout << ' ';
+            for (int j = 0; j < width; j++) std::putchar(' ');
         }
         moveCursorToBottom();
     }
