@@ -7,5 +7,8 @@ add_library(rfui STATIC
         basicClasses/Root.cpp basicClasses/Root.h
         basicClasses/Widget.cpp basicClasses/Widget.h
         basicClasses/Input.cpp basicClasses/Input.h
-        basicClasses/TextField.cpp basicClasses/TextField.h)
+        basicClasses/TextField.cpp basicClasses/TextField.h
+        extern/format.cc
+        extern/os.cc
+        )
 target_include_directories(rfui PUBLIC "${PROJECT_SOURCE_DIR}/include")
