@@ -8,9 +8,11 @@
 #include "Label.h"
 #include "rfui.h"
 
+// Widget constructor. User has to keep in mind that 1 line will be used for title
 rfui::Widget::Widget(int height, int width, int x, int y, std::string title, int fgColor, int bgColor) {
     this->height = height;
-    this->width = width;
+    if (width < strLenUtf8(title) + 2) this->width = strLenUtf8(title) + 2;
+    else this->width = width;
     this->x = x;
     this->y = y;
     this->bgColor = bgColor;
