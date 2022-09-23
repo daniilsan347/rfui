@@ -10,6 +10,8 @@
 
 using fmt::print;
 
+
+
 rfui::Root::Root(int lines, int cols, int fgColor, int bgColor) {
     this->lines = lines;
     this->columns = cols;

@@ -183,19 +183,27 @@ namespace rfui {
     }
     std::vector<std::string> splitUtf8(const std::string &str) {
         std::vector<std::string> result;
-        std::string temp;
+        std::string tempSymbol;
         // Split unicode encoded string
         for (char i : str) {
             if ((i & 0xC0) != 0x80) {
-                if (!temp.empty()) {
-                    result.push_back(temp);
-                    temp.clear();
+                if (!tempSymbol.empty()) {
+                    result.push_back(tempSymbol);
+                    // Double width compensation
+                    if (tempSymbol.size() >= 3) {
+                        result.emplace_back("");
+                    }
+                    tempSymbol.clear();
                 }
             }
-            temp += i;
+            tempSymbol += i;
         }
-        if (!temp.empty()) {
-            result.push_back(temp);
+        if (!tempSymbol.empty()) {
+            result.push_back(tempSymbol);
+            // Double width compensation
+            if (tempSymbol.size() >= 3) {
+                result.emplace_back("");
+            }
         }
         return result;
     }
