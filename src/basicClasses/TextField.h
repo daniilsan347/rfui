@@ -23,7 +23,7 @@ namespace rfui {
         std::vector <std::string> lines;
     public:
         TextField();
-        TextField(int x, int y, int w, int h, int fgColor = 0, int bgColor = 0);
+        TextField(int x, int y, int h, int w, int fgColor = 0, int bgColor = 0);
         // Getters
         void getPosition(int &tfX, int &tfY) const {tfX = this->x; tfY = this->y;};
         [[nodiscard]] int getX() const {return this->x;};
@@ -44,6 +44,8 @@ namespace rfui {
         void setWidth(int width) {this->w = width;};
         void setHeight(int height) {this->h = height;};
         // Methods
+        void clear() { this->lines.clear(); };
+        void addLines(int amount) { for(int i = 0; i < amount; ++i) {this->lines.emplace_back();}};
         void addStr(const std::string &str);
         void draw(BufferCell **buffer);
         std::string& operator[](size_t index) {return lines[index];};

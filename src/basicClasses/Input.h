@@ -59,20 +59,11 @@ namespace rfui {
         [[maybe_unused]] [[nodiscard]] bool isVisible() const { return this->visible; };
         [[nodiscard]] int getX()                        const { return this->x;       };
         [[nodiscard]] int getY()                        const { return this->y;       };
+        [[maybe_unused]] auto getData() {return this->data;};
         // Methods
         void draw(BufferCell **buffer);
         [[maybe_unused]] void reset() { this->input->setText(""); this->data = InContainer(); };
         [[maybe_unused]] InContainer getInput();
-        // Input conversions
-        [[maybe_unused]] [[nodiscard]] int getInt() const { return this->data.getInt(); };
-        [[maybe_unused]] [[nodiscard]] long getLong() const { return this->data.getLong(); };
-        [[maybe_unused]] [[nodiscard]] long long getLongLong() const { return this->data.getLongLong(); };
-        [[maybe_unused]] [[nodiscard]] float getFloat() const { return this->data.getFloat(); };
-        [[maybe_unused]] [[nodiscard]] double getDouble() const { return this->data.getDouble(); };
-        [[maybe_unused]] [[nodiscard]] long double getLongDouble() const { return this->data.getLongDouble(); };
-        [[maybe_unused]] [[nodiscard]] bool getBool() const { return this->data.getBool(); };
-        [[maybe_unused]] [[nodiscard]] std::string getString() const { return this->data.getString(); };
-
     };
 
     class InField {

@@ -38,11 +38,13 @@ namespace rfui {
         [[maybe_unused]] void setTitle(std::string text) { this->title->setText(std::move(text)); };
         [[maybe_unused]] void setVisible(bool isVisible) { this->visible = isVisible; };
         // Widget getters
-        [[maybe_unused]] void getSize(int &w, int &h)       const { w = this->width; h = this->height; };
-        [[maybe_unused]] void getPosition(int &wX, int &wY) const { wX = this->x; wY = this->y;        };
-        [[maybe_unused]] [[nodiscard]] int getBgColor()     const { return this->bgColor;              };
-        [[maybe_unused]] [[nodiscard]] int getFgColor()     const { return this->fgColor;              };
-        [[maybe_unused]] [[nodiscard]] bool isVisible()     const { return this->visible;              };
+        [[maybe_unused]] void getSize(int &w, int &h) const { w = this->width; h = this->height; };
+        int getWidth() { return this->width; };
+        int getHeight() { return this->height; };
+        [[maybe_unused]] void getPosition(int &wX, int &wY) const { wX = this->x; wY = this->y;     };
+        [[maybe_unused]] [[nodiscard]] int getBgColor() const { return this->bgColor;              };
+        [[maybe_unused]] [[nodiscard]] int getFgColor() const { return this->fgColor;              };
+        [[maybe_unused]] [[nodiscard]] bool isVisible() const { return this->visible;              };
         // Widget methods
         void draw(BufferCell **buffer);
 

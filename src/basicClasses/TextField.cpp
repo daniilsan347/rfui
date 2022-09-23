@@ -16,7 +16,7 @@ rfui::TextField::TextField() {
 }
 
 // TextField constructor. Text has to be assigned with separate addStr function
-rfui::TextField::TextField(int x, int y, int w, int h, int fgColor, int bgColor) {
+rfui::TextField::TextField(int x, int y, int h, int w, int fgColor, int bgColor) {
     this->x = x; this->y = y;
     this->w = w; this->h = h;
     this->fgColor = fgColor;
